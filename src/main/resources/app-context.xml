@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+ 		http://www.springframework.org/schema/beans
+ 		http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
+
+    <bean id="client" class="application.Client" scope="prototype">
+        <constructor-arg index="0" value="1" type="java.lang.Long"/>
+        <constructor-arg index="1" value="Ivan" type="java.lang.String"/>
+    </bean>
+
+    <bean id="eventLogger" class="application.EventLoggerImpl"/>
+
+    <bean id="fileEventLogger" class="application.FileEventLogger" init-method="init">
+        <constructor-arg value="EventLogger"/>
+    </bean>
+
+    <bean id="event" class="application.Event" scope="prototype">
+        <constructor-arg>
+            <bean class="java.util.Date"/>
+        </constructor-arg>
+        <constructor-arg ref="dateFormat"/>
+    </bean>
+    <bean id="dateFormat" class="java.text.DateFormat" factory-method="getDateTimeInstance"/>
+
+
+    <bean id="cacheFileLogger" class="application.CacheFileLogger" destroy-method="destroy" init-method="init">
+        <constructor-arg index="0" value="EventLogger" type="java.lang.String"/>
+        <constructor-arg index="1" value="3" type="java.lang.Integer"/>
+        <constructor-arg index="2" ref="cache"/>
+    </bean>
+
+    <bean id="cache" class="application.Cache"/>
+
+    <bean id="app" class="application.App">
+        <constructor-arg index="0" ref="client"/>
+        <constructor-arg index="1" ref="eventLogger"/>
+        <constructor-arg index="2" ref="fileEventLogger"/>
+        <constructor-arg index="3" ref="cacheFileLogger"/>
+    </bean>
+
+</beans>
