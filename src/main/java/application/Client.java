@@ -13,6 +13,12 @@ public class Client {
 
     private String name;
 
+    private String greeting;
+
+    public void setGreeting(String greeting) {
+        this.greeting = greeting;
+    }
+
     public Long getId() {
         return id;
     }

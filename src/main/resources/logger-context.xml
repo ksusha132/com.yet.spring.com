@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+ 		http://www.springframework.org/schema/beans
+ 		http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
+
+
+    <import resource="adititon-context.xml"/>
+
+    <bean id="eventLogger" class="application.EventLoggerImpl"/>
+
+    <bean id="fileEventLogger" class="application.FileEventLogger" init-method="init">
+        <constructor-arg value="EventLogger"/>
+    </bean>
+
+    <bean id="cacheFileLogger" class="application.CacheFileLogger" destroy-method="destroy" init-method="init">
+        <constructor-arg index="0" value="EventLogger" type="java.lang.String"/>
+        <constructor-arg index="1" value="3" type="java.lang.Integer"/>
+        <constructor-arg index="2" ref="cache"/>
+    </bean>
+
+    <bean id="combinedEventLogger" class="application.CombinedEventLogger">
+        <!--<constructor-arg ref="eventLogger"/>-->
+        <!--<constructor-arg ref="fileEventLogger"/>-->
+        <!--<constructor-arg ref="cacheFileLogger"/>-->
+
+        <constructor-arg>
+            <list>
+                <ref bean="eventLogger"/>
+                <ref bean="fileEventLogger"/>
+            </list>
+        </constructor-arg>
+    </bean>
+
+    <bean id="app" class="application.App">
+        <constructor-arg index="0" ref="client"/>
+        <constructor-arg index="1" ref="cacheFileLogger"/>
+        <!--<constructor-arg index="2" ref="fileEventLogger"/>-->
+        <!--<constructor-arg index="3" ref="cacheFileLogger"/>-->
+        <constructor-arg>
+            <map>
+                <entry key="INFO" value-ref="eventLogger"/>
+                <entry key="ERROR" value-ref="combinedEventLogger"/>
+            </map>
+        </constructor-arg>
+    </bean>
+</beans>

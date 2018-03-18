@@ -3,22 +3,28 @@ package application;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import java.util.Map;
+
 
 public class App {
 //    Client client;
 //
 //    EventLoggerImpl eventLogger;
 
-    private EventLogger eventLogger;
-    private EventLogger fileEventLogger;
     private EventLogger cacheFileLogger;
-    private Client client;
 
-    public App(Client client, EventLogger eventLogger, EventLogger fileEventLogger, EventLogger cacheFileLogger) {
+    //private EventLogger fileEventLogger;
+    //private EventLogger cacheFileLogger;
+
+    private Client client;
+    private Map<EventType, EventLogger> loggerMap;
+
+    public App(Client client, EventLogger cacheFileLogger , Map<EventType, EventLogger> loggerMap) {
         this.client = client;
-        this.eventLogger = eventLogger;
-        this.fileEventLogger = fileEventLogger;
+        this.loggerMap = loggerMap;
         this.cacheFileLogger = cacheFileLogger;
+//        this.fileEventLogger = fileEventLogger;
+//        this.cacheFileLogger = cacheFileLogger;
     }
 
     public App() {
@@ -61,26 +67,43 @@ public class App {
         client5.setId(5L);
         client5.setName("Lyosha");
 
-        app.logEvent(ctx.getBean("event", Event.class), client);
-        app.logEvent(ctx.getBean("event", Event.class), client1);
-        app.logEvent(ctx.getBean("event", Event.class), client2);
-        app.logEvent(ctx.getBean("event", Event.class), client3);
-        app.logEvent(ctx.getBean("event", Event.class), client4);
-        app.logEvent(ctx.getBean("event", Event.class), client5);
+        app.logEvent1(EventType.ERROR, "Fun", ctx.getBean("event", Event.class));
+
+//        app.logEvent(ctx.getBean("event", Event.class), client);
+//        app.logEvent(ctx.getBean("event", Event.class), client1);
+//        app.logEvent(ctx.getBean("event", Event.class), client2);
+//        app.logEvent(ctx.getBean("event", Event.class), client3);
+//        app.logEvent(ctx.getBean("event", Event.class), client4);
+//        app.logEvent(ctx.getBean("event", Event.class), client5);
 
         ctx.close();
     }
 
-    private void logEvent(Event event, Client client) {
-        if (client.getId() == 1) {
-            // String message = smg + " This message contains: " + client.getName();
-            eventLogger.logEvent(event);
-        } else if (client.getId() == 2) {
-            //String message = smg + " This message contains:" + client.getId();
-            fileEventLogger.logEvent(event);
-        } else {
-            cacheFileLogger.logEvent(event);
-        }
+//    private void logEvent(Event event, Client client) {
+//        if (client.getId() == 1) {
+//            // String message = smg + " This message contains: " + client.getName();
+//            eventLogger.logEvent(event);
+//        } else if (client.getId() == 2) {
+//            //String message = smg + " This message contains:" + client.getId();
+//            fileEventLogger.logEvent(event);
+//        } else {
+//            cacheFileLogger.logEvent(event);
+//        }
+//
+//    }
 
+
+    private void logEvent1(EventType type, String msg, Event event) {
+        EventLogger el = loggerMap.get(type);
+
+        if (el == null) {
+            el = cacheFileLogger;
+        }
+        el.logEvent(event);
     }
+
+    // if event type  == null ->  cacheFileEventLogger
+    //info - eventLogger
+    //error - log everywhere
+
 }
