@@ -5,11 +5,26 @@
  		http://www.springframework.org/schema/beans
  		http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
 
+    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+
+        <property name="locations">
+            <list>
+                <value>classpath:client.properties</value>
+            </list>
+        </property>
+
+        <property name="ignoreResourceNotFound" value="true"/>
+        <property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE"/>
+    </bean>
 
     <bean id="client" class="application.Client" scope="prototype">
-        <property name="greeting" value="Hello"/>
-        <constructor-arg index="0" value="1" type="java.lang.Long"/>
-        <constructor-arg index="1" value="Ivan" type="java.lang.String"/>
+        <!--<property name="greeting" value="Hello"/>-->
+        <!--<constructor-arg index="0" value="1" type="java.lang.Long"/>-->
+        <!--<constructor-arg index="1" value="Ivan" type="java.lang.String"/>-->
+
+        <constructor-arg index="0" value="${id}"/>
+        <constructor-arg index="1" value="${name}"/>
+       <property name="greeting" value="${greeting}"/>
     </bean>
 
     <bean id="event" class="application.Event" scope="prototype">

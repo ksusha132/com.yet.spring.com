@@ -1,5 +1,7 @@
 package application;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -11,6 +13,8 @@ public class App {
 //
 //    EventLoggerImpl eventLogger;
 
+    @Autowired
+    @Qualifier("cacheFileLogger")
     private EventLogger cacheFileLogger;
 
     //private EventLogger fileEventLogger;
@@ -19,10 +23,10 @@ public class App {
     private Client client;
     private Map<EventType, EventLogger> loggerMap;
 
-    public App(Client client, EventLogger cacheFileLogger , Map<EventType, EventLogger> loggerMap) {
+    public App(Client client, Map<EventType, EventLogger> loggerMap) {
         this.client = client;
         this.loggerMap = loggerMap;
-        this.cacheFileLogger = cacheFileLogger;
+//        this.cacheFileLogger = cacheFileLogger;
 //        this.fileEventLogger = fileEventLogger;
 //        this.cacheFileLogger = cacheFileLogger;
     }

@@ -1,5 +1,6 @@
 package application;
 
+import javax.annotation.PreDestroy;
 import java.io.IOException;
 import java.util.List;
 
@@ -34,6 +35,7 @@ public class CacheFileLogger extends FileEventLogger {
         super.init();
     }
 
+    //@PreDestroy
     public void destroy() {
 
         if (cache.getEvents() != null) {

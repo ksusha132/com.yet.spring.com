@@ -2,6 +2,7 @@ package application;
 
 import org.apache.commons.io.FileUtils;
 
+import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -24,16 +25,17 @@ public class FileEventLogger implements EventLogger {
 
     }
 
-    public void init() throws IOException{
+   // @PostConstruct
+    public void init() throws IOException {
 
         this.file = new File(name);
 
-        if (!file.exists()){
+        if (!file.exists()) {
             file.createNewFile();
         }
 
-        if (!file.canWrite()){
-           throw new RuntimeException();
+        if (!file.canWrite()) {
+            throw new RuntimeException();
         }
 
     }
